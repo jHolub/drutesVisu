@@ -1,0 +1,20 @@
+#xCoor
+2121
+
+#yCoor
+21221
+
+#density
+4
+
+#edges
+3
+
+#coordinates X  Y
+2	2
+2	2
+21122121	2
+555	1
+1	2
+3	4
+

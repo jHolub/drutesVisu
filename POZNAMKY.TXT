@@ -1,0 +1,7 @@
+1.number scientific notation - problem se ctenim: -6.91311072733656724887E-0002
+
+2.ktere vystupy k vizualizaci
+
+3. output file konci: 'data-000002.png');clear - kcemu je to nutne...
+
+4. v pripade matrix_theta po casovych krocich, moznost animace
