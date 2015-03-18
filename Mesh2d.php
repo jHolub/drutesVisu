@@ -4,7 +4,7 @@ include 'ConfigClass.php';
 
 class Mesh2D extends ConfigClass {
 
-    private $arrayData;
+    protected $arrayData;
 // DEFAULT VALUE    
     protected $xCoor = 100;
     protected $yCoor = 100;
@@ -36,7 +36,7 @@ class Mesh2D extends ConfigClass {
         $this->initMesh2D();
     }
 
-    private function initMesh2D() {
+    public function initMesh2D() {
 
         $this->xCoor = $this->arrayData[0][0];
         $this->yCoor = $this->arrayData[1][0];
@@ -81,7 +81,7 @@ class Mesh2D extends ConfigClass {
         }
     }
 
-    public function printMesh2DConf() {
+    public function printConf() {
 
         $collSeparator = "\t";
 

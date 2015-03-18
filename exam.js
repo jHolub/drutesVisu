@@ -39,9 +39,9 @@ function loadCsvAnimationExample() {
   csv += '"x", "y", "value", "time"\n';
 
   // create some nice looking data with sin/cos
-  var steps = 20;
-  var axisMax = 314;
-  var tMax = 31;
+  var steps = 2.5;
+  var axisMax = 10;
+  var tMax = 2;
   var axisStep = axisMax / steps;
   
   yy = 100;
@@ -50,13 +50,13 @@ function loadCsvAnimationExample() {
     for (var x = 0; x < axisMax; x+=axisStep) {
       for (var y = 0; y < axisMax; y+=axisStep) {
         var value = Math.sin(x/50 + t/10) * Math.cos(y/50 + t/10) * 50 + 50;
-        //csv += round(x, 2) + ', ' + round(y, 2) + ', ' + round(value, 2) + ', ' + t + '\n';
+        csv += round(x, 2) + ', ' + round(y, 2) + ', ' + round(value, 2) + ', ' + t + '\n';
         
         if(yy == 100){
             yy = 0;
         }else{yy = 100;}
         
-        csv += round(x, 2) + ', ' + yy + ', ' + round(value, 2) + ', ' + t + '\n';
+        //csv += round(x, 2) + ', ' + yy + ', ' + round(value, 2) + ', ' + t + '\n';
         
       }
     }

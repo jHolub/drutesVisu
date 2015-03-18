@@ -9,7 +9,7 @@ class GlobalConf extends ConfigClass {
     protected $model = "RE_std";
     protected $dimension = 1;
     protected $maxIteration = 20;
-    protected $iterationCriterion = 0.001;
+    protected $iteration = 0.001;
     protected $endTime = 100;
     protected $minTime = 0.1;
     protected $maxTime = 1;
@@ -31,50 +31,88 @@ class GlobalConf extends ConfigClass {
         $this->arrayData[$key][0] = $post['dimension'];
 
         $key++;
-        for ($edge = 0; $edge < $this->arrayData[1][0]; $edge ++) {
-            $this->arrayData[$key][0] = $post["layers_" . $edge . "_0"];
-            $this->arrayData[$key][1] = $post["layers_" . $edge . "_1"];
-            $this->arrayData[$key][2] = $post["layers_" . $edge . "_2"];
+        $this->arrayData[$key][0] = $post['maxIteration'];
+        
+        $key++;
+        $this->arrayData[$key][0] = $post['iteration'];
+        
+        $key++;
+        $this->arrayData[$key][0] = $post['endTime'];
+        
+        $key++;
+        $this->arrayData[$key][0] = $post['minTime'];
+        
+        $key++;
+        $this->arrayData[$key][0] = $post['maxTime'];
+ 
+        $key++;
+        $this->arrayData[$key][0] = $post['numberObservationTimes'];        
+        
+        $key++;
+        for ($edge = 0; $edge < $this->arrayData[7][0]; $edge ++) {
+            $this->arrayData[$key][0] = $post["observationTime_" . $edge];
             $key++;
         }
 
-        $this->arrayData[$key][0] = $post['numberMaterials'];
-        $materialsKey = $key;
+        $this->arrayData[$key][0] = $post['observationPoints'];
+        $observationPoints = $key;
         $key++;
-        for ($edge = 0; $edge < $this->arrayData[$materialsKey][0]; $edge ++) {
-            $this->arrayData[$key][0] = $post["materials_" . $edge . "_0"];
-            $this->arrayData[$key][1] = $post["materials_" . $edge . "_1"];
-            $this->arrayData[$key][2] = $post["materials_" . $edge . "_2"];
+        for ($edge = 0; $edge < $this->arrayData[$observationPoints][0]; $edge ++) {
+            $this->arrayData[$key][0] = $post["observationPoint_" . $edge];
             $key++;
         }
-        $this->initMesh();
+            
+        $this->initGlobal();
+        
     }
 
-    private function initMesh() {
+    public function initGlobal() {
 
         $this->model = $this->arrayData[0][0];
         $this->dimension = $this->arrayData[1][0];
+        $this->maxIteration = $this->arrayData[2][0];
+        $this->iteration = $this->arrayData[3][0]; 
+        $this->endTime = $this->arrayData[4][0]; 
+        $this->minTime = $this->arrayData[5][0]; 
+        $this->maxTime = $this->arrayData[6][0];       
+        $this->numberObservationTimes = $this->arrayData[7][0];      
 // clean default value        
-        $this->layers = array();
-        for ($numIntervals = 0; $numIntervals < $this->intervals; $numIntervals ++) {
+        $this->observationTime = array();
+        for ($numIntervals = 0; $numIntervals < $this->numberObservationTimes; $numIntervals ++) {
 
-            $this->layers[] = $this->arrayData[2 + $numIntervals];
+            $this->observationTime[] = $this->arrayData[8 + $numIntervals][0];
         }
 
-        $this->numberMaterials = $this->arrayData[2 + $this->intervals][0];
+        $this->observationPoints = $this->arrayData[8 + $this->numberObservationTimes][0];
 // clean default value        
-        $this->materials = array();
-        for ($materials = 0; $materials < $this->numberMaterials; $materials ++) {
+        $this->observationPoint = array();
+        for ($materials = 0; $materials < $this->observationPoints; $materials ++) {
 
-            $this->materials[] = $this->arrayData[3 + $this->intervals + $materials];
+            $this->observationPoint[] = $this->arrayData[9 + $this->numberObservationTimes + $materials][0];
         }
     }
 
-    public function __get(){
+    public function __get($name){
+        
+        return $this->$name;
+    }
+    
+    public function getObservationTime($i){
 
+        return $this->observationTime[$i];
     }
 
-    public function printMeshConf() {
+    public function getObservationPointX($i){
+
+        return $this->observationPoint[$i];
+    } 
+    
+    public function getObservationPointY($i){
+
+        return $this->observationPoint[$i];
+    }     
+    
+    public function printConf() {
 
         $collSeparator = "\t";
 
@@ -92,9 +130,9 @@ class GlobalConf extends ConfigClass {
 
         $conf = $conf . $this->maxIteration . "\n" . "\n";
 
-        $conf = $conf . "iterationCriterion" . "\n";
+        $conf = $conf . "#iterationCriterion" . "\n";
 
-        $conf = $conf . $this->iterationCriterion . "\n" . "\n"; 
+        $conf = $conf . $this->iteration . "\n" . "\n"; 
         
         $conf = $conf . "#endTime" . "\n";
 
@@ -104,11 +142,11 @@ class GlobalConf extends ConfigClass {
 
         $conf = $conf . $this->minTime . "\n" . "\n";
 
-        $conf = $conf . "maxTime" . "\n";
+        $conf = $conf . "#maxTime" . "\n";
 
         $conf = $conf . $this->maxTime . "\n" . "\n";       
 
-        $conf = $conf . "numberObservationTimes" . "\n";
+        $conf = $conf . "#numberObservationTimes" . "\n";
 
         $conf = $conf . $this->numberObservationTimes . "\n" . "\n";           
         

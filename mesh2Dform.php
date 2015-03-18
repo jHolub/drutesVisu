@@ -12,7 +12,7 @@
             $mssubmit = new Mesh2D();
 
             $mssubmit->initFromForm($_POST);
-            $record = $mssubmit->printMesh2DConf();
+            $record = $mssubmit->printConf();
             $mssubmit->cleanConfig(__DIR__ . "/conf2d.TXT");
             $mssubmit->saveConfig(__DIR__ . "/conf2d.TXT", $record, FILE_APPEND);
         }
@@ -20,6 +20,8 @@
         $ms = new Mesh2D();
 
         $ms->initFromFile(__DIR__ . "/conf2d.TXT");
+        
+        $ms->initMesh2D();
         ?>
 
         <a href="">refresh</a>

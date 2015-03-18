@@ -86,7 +86,7 @@ class Mesh1D extends ConfigClass{
         return $this->materials[$materials][$coll];
     }
     
-    public function printMeshConf() {
+    public function printConf() {
 
         $collSeparator = "\t";
 

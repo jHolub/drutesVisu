@@ -26,10 +26,6 @@ class ConfigClass{
                 }
             }
             fclose($handle);
-
-
-
-            $this->initMesh();
         }
     }    
     

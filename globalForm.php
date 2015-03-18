@@ -8,18 +8,18 @@
         include('GlobalConf.php');
 
         if ($_POST) {
-
             $mssubmit = new GlobalConf();
-
             $mssubmit->initFromForm($_POST);
-            $record = $mssubmit->printMeshConf();
-            $mssubmit->cleanConfig(__DIR__ . "/conf.TXT");
-            $mssubmit->saveConfig(__DIR__ . "/conf.TXT", $record, FILE_APPEND);
+            $record = $mssubmit->printConf();
+            $mssubmit->cleanConfig(__DIR__ . "/global.conf");
+            $mssubmit->saveConfig(__DIR__ . "/global.conf", $record, FILE_APPEND);
         }
 
         $ms = new GlobalConf();
 
-        $ms->initFromFile(__DIR__ . "/conf.TXT");
+        $ms->initFromFile(__DIR__ . "/global.conf");
+
+        $ms->initGlobal();
         ?>
 
         <a href="">refresh</a>
@@ -37,10 +37,14 @@
                 <tr>
                     <td>
                         <select id='model' name='model'>
-                            <option value='RE_std' selected>
+                            <option value='RE_std' 
+                                    <?php if ($ms->model == "RE_std"): ?>selected<?php endif; ?>
+                                    >
                                 standard Richards equation ( RE_std ) - recommended
                             </option>
-                            <option value='RE_mod'>
+                            <option value='RE_mod'
+                                    <?php if ($ms->model == "RE_mod"): ?>selected<?php endif; ?>
+                                    >
                                 modified Richards eq. (Noborio) ( RE_mod )
                             </option>
                         </select>
@@ -60,9 +64,13 @@
                 <tr>
                     <td>
                         <select id='dimension' name='dimension'>
-                            <option value='1' selected>1D
+                            <option value='1' 
+                                    <?php if ($ms->dimension == 1): ?>selected<?php endif; ?>
+                                    >1D
                             </option>
-                            <option value='2'>2D
+                            <option value='2'
+                                    <?php if ($ms->dimension == 2): ?>selected<?php endif; ?>                                    
+                                    >2D
                             </option> 
                         </select>
                     </td>
@@ -85,10 +93,10 @@
                     </td>            
                 </tr>
                 <tr><td>
-                        <input rule='int' type='number' id='maxIteration' name='maxIteration'  step='any'>
+                        <input rule='int' type='number' id='maxIteration' name='maxIteration'  step='any' value="<?php echo $ms->maxIteration; ?>">
                     </td>
                     <td>
-                        <input rule='real' type='number' id='iterationCriterion' name='iterationCriterion' step='any'>
+                        <input rule='real' type='number' id='iteration' name='iteration' step='any' value="<?php echo $ms->iteration; ?>">
                     </td>                                
                 </tr>
                 <tr>
@@ -106,10 +114,10 @@
                 </tr>
                 <tr>
                     <td>
-                        <input rule='real' type='number' id='endTime' name='endTime' step='any'>
+                        <input rule='real' type='number' id='endTime' name='endTime' step='any' value="<?php echo $ms->endTime; ?>">
                     </td>
                     <td>
-                        <input rule='real' type='number' id='minTime' name='minTime' step='any'>
+                        <input rule='real' type='number' id='minTime' name='minTime' step='any' value="<?php echo $ms->minTime; ?>">
                     </td>
                 </tr>
                 </tr>
@@ -124,7 +132,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <input rule='real' type='number' id='maxTime' name='maxTime' step='any'>
+                        <input rule='real' type='number' id='maxTime' name='maxTime' step='any' value="<?php echo $ms->maxTime; ?>">
                     </td>
                 </tr>
 
@@ -143,55 +151,42 @@
                 </tr>
                 <tr>
                     <td>
-                        <input rule='int' type='number' id='numberObservationTimes' name='numberObservationTimes' current_amount="<?php echo $this->model->amount['number_observation_times']; ?>" type='number' value='1' step='any' onchange="setAmount(this, 'number_observation_times', 'observed time ')">
+                        <input rule='int' type='number' id='numberObservationTimes' name='numberObservationTimes' type='number' value='<?php echo $ms->numberObservationTimes; ?>' step='any'>
                     </td>
                 </tr>
             </table>
-
-
-
-
-
 
             <table class='conf_group'>
 
                 <tr><td>
                         <div class='conf_group' id='number_observation_times_group'>  
 
-                            <?php for ($i = 0; $i < $this->model->amount['number_observation_times']; $i++): ?>  
+                            <?php for ($i = 0; $i < $ms->numberObservationTimes; $i++): ?>  
 
-                                <fieldset id='number_observation_times_group_<?php echo $i; ?>'>
+                                <fieldset>
                                     <legend>observed time <?php echo $i + 1; ?></legend>
 
-                                    <input rule = 'real' id='observation_time_<?php echo $i; ?>' type='number' name='observation_time_<?php echo $i; ?>' value='0' step='any'>
+                                    <input rule = 'real' id='observationTime_<?php echo $i; ?>' type='number' name='observationTime_<?php echo $i; ?>' value='<?php echo $ms->getObservationTime($i); ?>' step='any'>
 
                                 </fieldset>
                             <?php endfor; ?>
                         </div> 
                 </tr>
-            </table>    
-
-
-
-
+            </table> 
 
             <br>
-
-
-
-
 
 
 
             <table class='conf_group'>
                 <tr>
                     <td>
-                        <label for='observation_points'>number of observation points (only 1D)[integer]
+                        <label for='observationPoints'>number of observation points (only 1D)[integer]
                         </label>
                     </td>
                 </tr>
                 <tr><td>
-                        <input id='observation_points' rule='int' current_amount="<?php echo $this->model->amount['observation_points']; ?>" type='number' name='observation_points' value='1' step='any' onchange="setAmount(this, 'observation_points', 'point')"></td>
+                        <input id='observationPoints' rule='int' type='number' name='observationPoints' value='<?php echo $ms->observationPoints; ?>' step='any'></td>
                 </tr>
             </table>
 
@@ -200,7 +195,7 @@
             <table class='conf_group'>
                 <tr>
                     <td>
-                        <label>observation points coordinates X
+                        <label>observation points coordinates 1D - X, 2D - X,Y
                         </label>
                     </td>
                 </tr>
@@ -208,14 +203,15 @@
                     <td>
                         <div class='conf_group' id='observation_points_group'>  
 
-                            <?php for ($i = 0; $i < $this->model->amount['observation_points']; $i++): ?>  
+                            <?php for ($i = 0; $i < $ms->observationPoints; $i++): ?>  
 
-                                <fieldset id='observation_points_group_<?php echo $i; ?>'>
-                                    <legend>point <?php echo $i + 1; ?></legend>
+                                <fieldset>
+                                    <legend> Point <?php echo $i + 1; ?></legend>
 
-                                    <input rule = 'real' id='observation_point_X_<?php echo $i; ?>' type='number' name='observation_point_X_<?php echo $i; ?>' value='0' step='any'>
-                               <!--     <input rule = 'real' id='observation_point_Y_<?php echo $i; ?>' type='number' name='observation_point_Y_<?php echo $i; ?>' value='' step='any'>
-                                    -->
+                                    <input rule = 'real' id='$ms->observationPoint<?php echo $i; ?>' type='number' name='observationPoint_<?php echo $i; ?>' value='<?php echo $ms->getObservationPointX($i); ?>' step='any'>
+                                    <?php if ($ms->dimension == 2): ?>                               
+                                        <input rule = 'real' id='$ms->observationPoint<?php echo $i; ?>' type='number' name='observationPoint_<?php echo $i; ?>' value='<?php echo $ms->getObservationPointY($i); ?>' step='any'>
+                                    <?php endif; ?>                                     
                                 </fieldset>
                             <?php endfor; ?>
                         </div> 
@@ -224,7 +220,7 @@
             </table>
 
             <input type='submit' value='CONFIRM'>
-            
+
         </form>
 
         <script>
