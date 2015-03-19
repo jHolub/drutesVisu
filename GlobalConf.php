@@ -58,7 +58,8 @@ class GlobalConf extends ConfigClass {
         $observationPoints = $key;
         $key++;
         for ($edge = 0; $edge < $this->arrayData[$observationPoints][0]; $edge ++) {
-            $this->arrayData[$key][0] = $post["observationPoint_" . $edge];
+            $this->arrayData[$key][0] = $post["observationPoint_" . $edge . "_0"];
+            $this->arrayData[$key][1] = $post["observationPoint_" . $edge . "_1"];
             $key++;
         }
             
@@ -88,7 +89,7 @@ class GlobalConf extends ConfigClass {
         $this->observationPoint = array();
         for ($materials = 0; $materials < $this->observationPoints; $materials ++) {
 
-            $this->observationPoint[] = $this->arrayData[9 + $this->numberObservationTimes + $materials][0];
+            $this->observationPoint[] = $this->arrayData[9 + $this->numberObservationTimes + $materials];
         }
     }
 
@@ -104,12 +105,12 @@ class GlobalConf extends ConfigClass {
 
     public function getObservationPointX($i){
 
-        return $this->observationPoint[$i];
+        return $this->observationPoint[$i][0];
     } 
     
     public function getObservationPointY($i){
 
-        return $this->observationPoint[$i];
+        return $this->observationPoint[$i][1];
     }     
     
     public function printConf() {

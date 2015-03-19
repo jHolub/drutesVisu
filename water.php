@@ -212,23 +212,23 @@
 
         <script>
 
-            function setCoordinates(num) {
-
+                      function setLayers(num, pattern) {
+                
                 feildCont = new Array();
-                for (i = 1; i <= num; i++) {
+                for (i = 0; i < num; i++) {
                     fieldset = document.createElement("fieldset");
                     legend = document.createElement("legend");
                     legend.innerHTML = "Edge: " + i;
                     fieldset.appendChild(legend);
                     controls = new Array();
-                    for (j = 1; j < 5; j++) {
+                    for (j = 0; j < 3; j++) {
                         control = document.createElement("input");
-                        if (document.getElementById('coordinates_' + i + "_" + j)) {
-                            control.value = document.getElementById('coordinates_' + i + "_" + j).value;
+                        if (document.getElementById(pattern + '_' + i + "_" + j)) {
+                            control.value = document.getElementById(pattern + '_' + i + "_" + j).value;
                         }
-                        control.id = 'coordinates_' + i + "_" + j;
+                        control.id = pattern + '_' + i + "_" + j;
                         control.type = "number";
-                        control.setAttribute('name', 'coordinates_' + i + "_" + j);
+                        control.setAttribute('name', pattern + '_' + i + "_" + j);
                         controls.push(control);
                     }
                     for (k = 0; k < controls.length; k++) {
@@ -238,14 +238,13 @@
                     feildCont.push(fieldset);
                 }
 
-                document.getElementById('coordinatesContainer').innerHTML = "";
+                document.getElementById(pattern + 'Container').innerHTML = "";
 
                 for (n = 0; n < feildCont.length; n++) {
 
-                    document.getElementById('coordinatesContainer').appendChild(feildCont[n]);
+                    document.getElementById(pattern + 'Container').appendChild(feildCont[n]);
                 }
             }
-
         </script>
     </body>
 </html>

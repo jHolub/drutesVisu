@@ -63,7 +63,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <select id='dimension' name='dimension'>
+                        <select id='dimension' name='dimension' onchange="changeDimension(this.value);">
                             <option value='1' 
                                     <?php if ($ms->dimension == 1): ?>selected<?php endif; ?>
                                     >1D
@@ -151,7 +151,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <input rule='int' type='number' id='numberObservationTimes' name='numberObservationTimes' type='number' value='<?php echo $ms->numberObservationTimes; ?>' step='any'>
+                        <input rule='int' type='number' id='numberObservationTimes' name='numberObservationTimes' type='number' value='<?php echo $ms->numberObservationTimes; ?>' step='any' onchange="setObservationTimes(this.value,'observationTime')">
                     </td>
                 </tr>
             </table>
@@ -159,7 +159,7 @@
             <table class='conf_group'>
 
                 <tr><td>
-                        <div class='conf_group' id='number_observation_times_group'>  
+                        <div id='observationTimeContainer'>  
 
                             <?php for ($i = 0; $i < $ms->numberObservationTimes; $i++): ?>  
 
@@ -186,7 +186,8 @@
                     </td>
                 </tr>
                 <tr><td>
-                        <input id='observationPoints' rule='int' type='number' name='observationPoints' value='<?php echo $ms->observationPoints; ?>' step='any'></td>
+                        <input id='observationPoints' rule='int' type='number' name='observationPoints' value='<?php echo $ms->observationPoints; ?>' step='any' onchange="setObservationPoint(this.value,'observationPoint')">
+                    </td>
                 </tr>
             </table>
 
@@ -201,16 +202,16 @@
                 </tr>
                 <tr>
                     <td>
-                        <div class='conf_group' id='observation_points_group'>  
+                        <div id='observationPointContainer'>  
 
                             <?php for ($i = 0; $i < $ms->observationPoints; $i++): ?>  
 
                                 <fieldset>
                                     <legend> Point <?php echo $i + 1; ?></legend>
 
-                                    <input rule = 'real' id='$ms->observationPoint<?php echo $i; ?>' type='number' name='observationPoint_<?php echo $i; ?>' value='<?php echo $ms->getObservationPointX($i); ?>' step='any'>
+                                    <input rule = 'real' id='observationPoint_<?php echo $i; ?>_0' type='number' name='observationPoint_<?php echo $i; ?>_0' value='<?php echo $ms->getObservationPointX($i); ?>' step='any'>
                                     <?php if ($ms->dimension == 2): ?>                               
-                                        <input rule = 'real' id='$ms->observationPoint<?php echo $i; ?>' type='number' name='observationPoint_<?php echo $i; ?>' value='<?php echo $ms->getObservationPointY($i); ?>' step='any'>
+                                        <input rule = 'real' id='observationPoint_<?php echo $i; ?>_1' type='number' name='observationPoint_<?php echo $i; ?>_1' value='<?php echo $ms->getObservationPointY($i); ?>' step='any'>
                                     <?php endif; ?>                                     
                                 </fieldset>
                             <?php endfor; ?>
@@ -225,23 +226,60 @@
 
         <script>
 
-            function setCoordinates(num) {
-
+            function setObservationTimes(num, pattern) {
+                
                 feildCont = new Array();
-                for (i = 1; i <= num; i++) {
+                for (i = 0; i < num; i++) {
                     fieldset = document.createElement("fieldset");
                     legend = document.createElement("legend");
                     legend.innerHTML = "Edge: " + i;
                     fieldset.appendChild(legend);
                     controls = new Array();
-                    for (j = 1; j < 5; j++) {
+     
                         control = document.createElement("input");
-                        if (document.getElementById('coordinates_' + i + "_" + j)) {
-                            control.value = document.getElementById('coordinates_' + i + "_" + j).value;
+                        if (document.getElementById(pattern + '_' + i)) {
+                            control.value = document.getElementById(pattern + '_' + i).value;
                         }
-                        control.id = 'coordinates_' + i + "_" + j;
+                        control.id = pattern + '_' + i;
                         control.type = "number";
-                        control.setAttribute('name', 'coordinates_' + i + "_" + j);
+                        control.setAttribute('name', pattern + '_' + i);
+                        controls.push(control);
+           
+                    for (k = 0; k < controls.length; k++) {
+
+                        fieldset.appendChild(controls[k]);
+                    }
+                    feildCont.push(fieldset);
+                }
+
+                document.getElementById(pattern + 'Container').innerHTML = "";
+
+                for (n = 0; n < feildCont.length; n++) {
+
+                    document.getElementById(pattern + 'Container').appendChild(feildCont[n]);
+                }
+            }
+
+            function setObservationPoint(num, pattern) {
+                
+                feildCont = new Array();
+                for (i = 0; i < num; i++) {
+                    fieldset = document.createElement("fieldset");
+                    legend = document.createElement("legend");
+                    legend.innerHTML = "Edge: " + i;
+                    fieldset.appendChild(legend);
+                    controls = new Array();
+                    
+                    dim = document.getElementById('dimension').value;
+                    
+                    for (j = 0; j < dim; j++) {
+                        control = document.createElement("input");
+                        if (document.getElementById(pattern + '_' + i + "_" + j)) {
+                            control.value = document.getElementById(pattern + '_' + i + "_" + j).value;
+                        }
+                        control.id = pattern + '_' + i + "_" + j;
+                        control.type = "number";
+                        control.setAttribute('name', pattern + '_' + i + "_" + j);
                         controls.push(control);
                     }
                     for (k = 0; k < controls.length; k++) {
@@ -251,14 +289,22 @@
                     feildCont.push(fieldset);
                 }
 
-                document.getElementById('coordinatesContainer').innerHTML = "";
+                document.getElementById(pattern + 'Container').innerHTML = "";
 
                 for (n = 0; n < feildCont.length; n++) {
 
-                    document.getElementById('coordinatesContainer').appendChild(feildCont[n]);
+                    document.getElementById(pattern + 'Container').appendChild(feildCont[n]);
                 }
             }
-
+            
+            
+            function changeDimension(value){
+                
+                
+            }
+            
+            
+            
         </script>
     </body>
 </html>

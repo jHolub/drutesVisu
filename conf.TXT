@@ -1,0 +1,17 @@
+#information
+100.0 cm - domain length
+
+#mumber intervals
+3
+
+#layers
+0.1	0.0	10.0
+1.0	10.0	90.0
+0.1	90.0	100.0
+
+#number materials
+2
+
+#materials
+1	0	100.0
+2	2	2
