@@ -68,6 +68,9 @@ class GlobalConf extends ConfigClass {
     }
 
     public function initGlobal() {
+        
+        // empty config file
+        if(!isset($this->arrayData)) return;
 
         $this->model = $this->arrayData[0][0];
         $this->dimension = $this->arrayData[1][0];

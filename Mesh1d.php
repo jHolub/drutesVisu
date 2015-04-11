@@ -47,6 +47,9 @@ class Mesh1D extends ConfigClass{
     }
 
     function initMesh() {
+        
+        // empty config file
+        if(!isset($this->arrayData)) return;
 
         $this->information = $this->arrayData[0][0];
         $this->intervals = $this->arrayData[1][0];

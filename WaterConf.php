@@ -67,7 +67,10 @@ class WaterConf extends ConfigClass {
     }
 
     public function initWater() {
-
+        
+        // empty config file
+        if(!isset($this->arrayData)) return;
+        
         $key = 0;
         $this->layers = $this->arrayData[$key][0];
         $key++;

@@ -212,7 +212,7 @@
 
         <script>
 
-                      function setLayers(num, pattern) {
+              function setLayers(num, pattern) {
                 
                 feildCont = new Array();
                 for (i = 0; i < num; i++) {
